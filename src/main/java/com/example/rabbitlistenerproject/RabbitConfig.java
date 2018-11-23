@@ -14,25 +14,26 @@ import org.springframework.stereotype.Component;
 @Configuration
 public class RabbitConfig {
 
-    private static final String TEST_QUEUE = "MyTestQueue";
-    private static final String TEST_EXCHANGE = "myTestExchange";
+    private static final String TEST_QUEUE = "TestQueue23";
+    private static final String TEST_EXCHANGE = "TextExchange23";
 
     @Bean
     Queue myTestQueue() {
-        return new Queue(TEST_QUEUE, false);
+        return new Queue(TEST_QUEUE, true);
     }
 
     @Bean
     Exchange myTestExchange() {
-        return new TopicExchange(TEST_EXCHANGE);
+        //return new TopicExchange(TEST_EXCHANGE);
+        return new DirectExchange(TEST_EXCHANGE);
     }
 
     @Bean
     Binding queueBinding() {
-        return new Binding(TEST_QUEUE, Binding.DestinationType.QUEUE, TEST_EXCHANGE, "simple", null);
+        return new Binding(TEST_QUEUE, Binding.DestinationType.QUEUE, TEST_EXCHANGE, "testRouting23", null);
     }
 
-    @Bean
+    @Bean // adding a connection
     ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory("localhost");
         connectionFactory.setUsername("guest");
@@ -40,7 +41,7 @@ public class RabbitConfig {
         return connectionFactory;
     }
 
-    @Bean
+    @Bean // adding listener
     MessageListenerContainer messageListenerContainer() {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
